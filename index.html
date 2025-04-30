@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora Retro</title>
+  <style>
+    body {
+      background-color: #111;
+      color: #fff;
+      font-family: 'Press Start 2P', cursive;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .calculadora {
+      background-color: #222;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 15px #555;
+    }
+    .pantalla {
+      background-color: #000;
+      color: #0f0;
+      font-size: 24px;
+      text-align: right;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      min-height: 40px;
+    }
+    .botones {
+      display: grid;
+      grid-template-columns: repeat(4, 60px);
+      grid-gap: 10px;
+    }
+    button {
+      font-family: inherit;
+      font-size: 16px;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: #444;
+      color: #fff;
+      transition: transform 0.1s ease-in-out;
+    }
+    button:active {
+      transform: scale(0.95);
+    }
+    .igual {
+      background-color: #ffa500;
+    }
+    .suma {
+      background-color: #3498db;
+    }
+    .resta {
+      background-color: #9b59b6;
+    }
+    .multiplicacion {
+      background-color: #e67e22;
+    }
+    .division {
+      background-color: #1abc9c;
+    }
+    .clear {
+      background-color: #e74c3c;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="calculadora">
+    <div class="pantalla" id="pantalla">0</div>
+    <div class="botones">
+      <button class="clear">C</button>
+      <button class="division">/</button>
+      <button class="multiplicacion">*</button>
+      <button class="resta">-</button>
+      <button>7</button>
+      <button>8</button>
+      <button>9</button>
+      <button class="suma">+</button>
+      <button>4</button>
+      <button>5</button>
+      <button>6</button>
+      <button class="igual">=</button>
+      <button>1</button>
+      <button>2</button>
+      <button>3</button>
+      <button>0</button>
+    </div>
+  </div>
+  <script>
+    const pantalla = document.getElementById('pantalla');
+    const botones = document.querySelectorAll('button');
+
+    let operacion = '';
+    let resultadoMostrado = false;
+
+    botones.forEach(boton => {
+      boton.addEventListener('click', () => {
+        const valor = boton.textContent;
+
+        if (valor === 'C') {
+          operacion = '';
+          pantalla.textContent = '0';
+          resultadoMostrado = false;
+        } else if (['+', '-', '*', '/'].includes(valor)) {
+          if (resultadoMostrado) {
+            resultadoMostrado = false;
+          }
+          if (operacion !== '' && !['+', '-', '*', '/'].includes(operacion.slice(-1))) {
+            operacion += valor;
+            pantalla.textContent = operacion;
+          }
+        } else if (valor === '=') {
+          try {
+            const resultado = eval(operacion);
+            pantalla.textContent = resultado;
+            operacion = resultado.toString();
+            resultadoMostrado = true;
+          } catch {
+            pantalla.textContent = 'Error';
+            operacion = '';
+            resultadoMostrado = false;
+          }
+        } else {
+          if (resultadoMostrado) {
+            //Bloquear entrada si se presiona número después de resultado, sin operador
+            return;
+          }
+          operacion += valor;
+          pantalla.textContent = operacion;
+        }
+      });
+    });
+  </script>
+</body>
+</html>
